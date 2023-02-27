@@ -1,0 +1,18 @@
+.questionNumbers{
+	font-size: 125px;
+}
+
+.arithmeticContainer{
+	text-align: right;
+}
+
+.arithmeticSign{
+	font-size: 125px;
+	position:absolute;
+	top: 20%;
+	left: 80%
+}
+
+.scoreclass{
+	font-size: 30px;
+}

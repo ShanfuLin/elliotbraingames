@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Elliot's Daily Math Exercise</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link th:href="@{/styles/css/main.css}" rel="stylesheet" />
+</head>
+
+<body style="min-width:500px">
+	<div>
+		<div class="card card-outline card-primary">
+			<div class="card-header text-center">
+				<h1><b>Elliot's</b> Daily Math Exercise</h1>
+				<h3>(2 Digits Addition & Subtraction)</h3>
+			</div>
+			<div class="card-body">
+				<p></p>
+			</div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-9">
+						<div class="row">
+							<div class="col-4 arithmeticContainer">
+								<p class="arithmeticSign" id="arithmeticSignID"
+									th:if="${tenQuestions[0].questionType == T(com.meaningfulgames.Addition_Subtraction_K2.model.QuestionType).ADDITION}">
+									+</p>
+								<p class="arithmeticSign" id="arithmeticSignID"
+									th:unless="${tenQuestions[0].questionType == T(com.meaningfulgames.Addition_Subtraction_K2.model.QuestionType).ADDITION}">
+									-</p>
+							</div>
+							<div class="col-3 .container" style="text-align: center; min-width: 200px">
+								<p th:text=0 id="questionID" hidden></p>
+								<p th:text="${tenQuestions[0].firstNumberPair}" class="questionNumbers"
+									id="firstNumber">
+								</p>
+								<p th:text="${tenQuestions[0].secondNumberPair}" class="questionNumbers"
+									id="secondNumber">
+								</p>
+								<p th:text="${tenQuestions[0].answer}" id="questionAnswer" hidden></p>
+								<hr>
+								<div class="table-bordered" style="text-align: center;">
+									<input type="number" id="enteredAnswer"
+										style="width:200px; height:130px; font-size:125px">
+									<br><br>
+									<button style="font-size: 30px;" id="submitButton" class="btn btn-primary"
+										onClick="submitAnswerFunction()">Submit Answer</button>
+								</div>
+								<hr>
+							</div>
+							<div class="col-5"></div>
+						</div>
+					</div>
+					<div class="col-3">
+						<table class="table table-bordered">
+							<tr>
+								<p>
+									<span class="scoreclass">
+										Score:
+									</span>
+									<span id="scoreline" class="scoreclass">
+										0
+									</span>
+									<span class="scoreclass">
+										/10
+									</span>
+								</p>
+							</tr>
+							<tr th:each="i : ${#numbers.sequence(1, 10)}">
+								<p>
+									<button th:text="'Question ' + ${i}" th:id="'Question' + ${i}"
+										style="font-size: 30px;" class="questionButtons btn btn-dark">
+									</button>
+								</p>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+		var checkIfAnsweredRecord = Array(10).fill(false);
+		localStorage.setItem('checkIfAnswered', JSON.stringify(checkIfAnsweredRecord));
+		localStorage.setItem('numberQAnswered', 0);
+		var elements = document.getElementsByClassName("questionButtons");
+		var questionIDHolder = document.getElementById("questionID");
+		var firstNumberElement = document.getElementById("firstNumber");
+		var secondNumberElement = document.getElementById("secondNumber");
+		var questionAnswerElement = document.getElementById("questionAnswer");
+		var arithmeticSignElement = document.getElementById("arithmeticSignID");
+		var userInputElement = document.getElementById("enteredAnswer");
+		var scorelineElement = document.getElementById("scoreline");
+		var submitButtonElement = document.getElementById("submitButton");
+
+		userInputElement.addEventListener("keypress", function (event) {
+			if (event.key == "Enter") {
+				submitAnswerFunction();
+			}
+		});
+
+		var changeQuestionContent = function changeQuestionContent(event) {
+			userInputElement.value = "";
+			var retrievedCheckIfAnsweredRecord = JSON.parse(localStorage.getItem('checkIfAnswered'));
+			var buttonID = event.target.id.substring(8) - 1;
+			var questionsArray = [[${tenQuestions}]];
+			var firstNumberToInsert = questionsArray[buttonID].firstNumberPair;
+			var secondNumberToInsert = questionsArray[buttonID].secondNumberPair;
+			var answerToInsert = questionsArray[buttonID].answer;
+			var questionType = questionsArray[buttonID].questionType;
+			questionIDHolder.innerText = buttonID;
+			firstNumberElement.innerText = firstNumberToInsert;
+			secondNumberElement.innerText = secondNumberToInsert;
+			questionAnswerElement.innerText = answerToInsert;
+			arithmeticSignElement.innerText = "-"
+			if (questionType == "ADDITION") {
+				arithmeticSignElement.innerText = "+";
+			}
+			else {
+				arithmeticSignElement.innerText = "-";
+			}
+			if (retrievedCheckIfAnsweredRecord[buttonID] != false) {
+				userInputElement.value = retrievedCheckIfAnsweredRecord[buttonID][1];
+				userInputElement.disabled = true;
+				submitButtonElement.disabled = true;
+				submitButtonElement.innerText = "Answered";
+			}
+			else {
+				userInputElement.disabled = false;
+				submitButtonElement.disabled = false;
+				submitButtonElement.innerText = "Submit Answer";
+			}
+		};
+
+		for (var i = 0; i < elements.length; i++) {
+			elements[i].addEventListener('click', changeQuestionContent, false)
+		};
+
+		function submitAnswerFunction() {
+			userInputElement.disabled = true;
+			submitButtonElement.disabled = true;
+			submitButtonElement.innerText = "Answered";
+			var questionNumber = questionIDHolder.innerText;
+			var questionToggleButton = document.getElementById("Question" + (parseInt(questionNumber) + 1));
+			var userAnswer = userInputElement.value;
+			var retrievedCheckIfAnsweredRecord = JSON.parse(localStorage.getItem('checkIfAnswered'));
+			retrievedCheckIfAnsweredRecord[questionNumber] = [true, userAnswer];
+			localStorage.setItem('checkIfAnswered', JSON.stringify(retrievedCheckIfAnsweredRecord));
+			var previousNumberQAnswer = parseInt(localStorage.getItem('numberQAnswered'));
+			localStorage.setItem('numberQAnswered', (previousNumberQAnswer + 1));
+			if (userAnswer == questionAnswerElement.innerText) {
+				var current_scoreline = scorelineElement.innerText;
+				var updated_scoreline = parseInt(current_scoreline) + 1;
+				scorelineElement.innerText = updated_scoreline;
+				questionToggleButton.classList.remove("btn-dark");
+				questionToggleButton.classList.add("btn-success");
+			}
+			else {
+				questionToggleButton.classList.remove("btn-dark");
+				questionToggleButton.classList.add("btn-danger");
+			}
+			if (localStorage.getItem('numberQAnswered') == '10') {
+				const data = {score: updated_scoreline};
+				fetch("/submitscore", {
+					method: "POST", // or 'PUT'
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						console.log("Success:", data);
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
+			}
+		}
+
+
+	</script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -32,4 +32,9 @@ public class DisplayQuestionController {
 		return "gamepage";
 	}
 	
+	@GetMapping(value = {"/CountingDollarsAndCents"})
+	public String CountDollarsAndCents(Model model) {
+		return "countmoneypage";
+	}
+	
 }

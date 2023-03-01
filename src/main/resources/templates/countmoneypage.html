@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Elliot Learns How To Count Money</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link th:href="@{/styles/css/main.css}" rel="stylesheet" />
+</head>
+
+<body>
+	<div class="card-header text-center">
+		<h1><b>Elliot</b> Learns To Count!</h1>
+		<h3>Dollars and Cents (SGD $)</h3>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-9">
+				<h1>Hello Elliot!</h1>
+				<div class="row" id="cashier_cartoon_container">
+						<img id="cashier_cartoon"
+						src="https://dl.dropboxusercontent.com/s/5jbwoei832uz9pg/Cashier_Cartoon.jpg?dl=0"
+						alt="2 dollar note">
+				</div>
+				<div class="row border border-dark" id="money_source_container">
+						<img class="notes"
+							src="https://dl.dropboxusercontent.com/s/yl61xbd7ob72hxv/Singapore_Bill_50_C.png?dl=0"
+							alt="2 dollar note">
+						<img class="notes"
+							src="https://dl.dropboxusercontent.com/s/fu6wrjd2x2knnst/Singapore_Bill_10_C.png?dl=0"
+							alt="2 dollar note">
+						<img class="notes" src="https://dl.dropboxusercontent.com/s/ececrg6fmdwmebw/Singapore_Bill_5_C.png?dl=0"
+							alt="2 dollar note">
+						<img class="notes" src="https://dl.dropboxusercontent.com/s/6ll7d9mp8hy6mjm/Singapore_Bill_2_C.png?dl=0"
+							alt="2 dollar note">
+						<img class="largecoin"
+							src="https://dl.dropboxusercontent.com/s/rwogs4unutjrluq/Singapore_Coin_1D_C.png?dl=0"
+							alt="2 dollar note">
+						<img class="largecoin"
+							src="https://dl.dropboxusercontent.com/s/2wg34akamw696y8/Singapore_Coin_50_C.png?dl=0"
+							alt="2 dollar note">
+						<img class="smallcoin"
+							src="https://dl.dropboxusercontent.com/s/anmxq1s8znduo67/Singapore_Coin_20_C.png?dl=0"
+							alt="2 dollar note">
+						<img class="smallcoin"
+							src="https://dl.dropboxusercontent.com/s/0krz0i2cmyqbxdj/Singapore_Coin_10_C.png?dl=0"
+							alt="2 dollar note">
+				</div>
+			</div>
+			<div class="col-3">
+				<table class="table table-bordered">
+					<tr>
+						<p>
+							<span class="scoreclass">
+								Score:
+							</span>
+							<span id="scoreline" class="scoreclass">
+								0
+							</span>
+							<span class="scoreclass">
+								/10
+							</span>
+						</p>
+					</tr>
+					<tr th:each="i : ${#numbers.sequence(1, 10)}">
+						<p>
+							<button th:text="'Question ' + ${i}" th:id="'Question' + ${i}" style="font-size: 30px;"
+								class="questionButtons btn btn-dark">
+							</button>
+						</p>
+					</tr>
+				</table>
+			</div>
+			<div>
+			</div>
+			<script th:inline="javascript">
+			</script>
+</body>
+
+</html>

@@ -95,6 +95,7 @@
 		var userInputElement = document.getElementById("enteredAnswer");
 		var scorelineElement = document.getElementById("scoreline");
 		var submitButtonElement = document.getElementById("submitButton");
+		var wrongAnswerRecordArray = [];
 
 		userInputElement.addEventListener("keypress", function (event) {
 			if (event.key == "Enter") {
@@ -161,15 +162,18 @@
 			else {
 				questionToggleButton.classList.remove("btn-dark");
 				questionToggleButton.classList.add("btn-danger");
+				var questionAndWrongAnswerGiven = firstNumberElement.innerText + " " + arithmeticSignElement.innerText + " " + secondNumberElement.innerText + " = " + userAnswer;
+				console.log(questionAndWrongAnswerGiven);
+				wrongAnswerRecordArray.push(questionAndWrongAnswerGiven);
 			}
 			if (localStorage.getItem('numberQAnswered') == '10') {
-				const data = {score: updated_scoreline};
+				const scoredata = {score: updated_scoreline, };
 				fetch("/submitscore", {
 					method: "POST", // or 'PUT'
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify(data),
+					body: JSON.stringify(scoredata),
 				})
 					.then((response) => response.json())
 					.then((data) => {
@@ -178,6 +182,23 @@
 					.catch((error) => {
 						console.error("Error:", error);
 					});
+
+				const wronganswersrecord = {questions: wrongAnswerRecordArray, };
+				fetch("/submitscore/wronganswersrecord", {
+					method: "POST", // or 'PUT'
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(wronganswersrecord),
+				})
+					.then((response) => response)
+					.then((data) => {
+						console.log("Success:", data);
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
+
 			}
 		}
 

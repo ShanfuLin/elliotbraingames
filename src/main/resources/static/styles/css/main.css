@@ -16,3 +16,37 @@
 .scoreclass{
 	font-size: 30px;
 }
+
+.notes{
+	max-width: 250px;
+	max-height: 150px;
+}
+
+.largecoin{
+	max-width: 150px;
+	max-height: 125px;
+}
+
+.smallcoin{
+	max-width: 125px;
+	max-height: 100px;
+}
+
+#cashier_cartoon_container{
+  	align-items: center;
+  	justify-content: center;	
+}
+
+#cashier_cartoon{
+    border-radius: 200px;
+	width: 700px;
+	height: 600px;
+}
+
+#money_source_container{
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;	
+	width: 1600px;
+	height: 200px;
+}

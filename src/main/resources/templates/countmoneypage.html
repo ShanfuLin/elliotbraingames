@@ -13,40 +13,70 @@
 <body>
 	<div class="card-header text-center">
 		<h1><b>Elliot</b> Learns To Count!</h1>
-		<h3>Dollars and Cents (SGD $)</h3>
+		<h3>(SGD $) Dollars and Cents ($0.10 to $10.00)</h3>
 	</div>
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-9">
-				<h1>Hello Elliot!</h1>
-				<div class="row" id="cashier_cartoon_container">
-						<img id="cashier_cartoon"
-						src="https://dl.dropboxusercontent.com/s/5jbwoei832uz9pg/Cashier_Cartoon.jpg?dl=0"
-						alt="2 dollar note">
+				<div>
+					<p id="questionNumber">Question 1
+					<p>
 				</div>
+				<br>
+				<div class="row" id="cashier_cartoon_container">
+					<div>
+						<img id="cashier_cartoon" src="/images/cashier_woman.jpg" alt="2 dollar note">
+					</div>
+					<p hidden>Q1</p>
+					<p th:text="${tenDoubleNumbers[0]}" id="question_answer" hidden></p>
+					<div class="speech-bubble" id="speechBubbleContainer">Hi Elliot! The total amount due today is $<span
+							th:text="${#numbers.formatDecimal(tenDoubleNumbers[0], 1, 2)}"></span>.</div>
+				</div>
+				<div class="row">
+					<table class="answer_table">
+						<tr>
+							<td class="money_drop_container" id="container1"></td>
+							<td class="money_drop_container" id="container2"></td>
+							<td class="money_drop_container" id="container3"></td>
+							<td class="money_drop_container" id="container4"></td>
+							<td class="money_drop_container" id="container5"></td>
+							<td class="money_drop_container" id="container6"></td>
+							<td class="money_drop_container" id="container7"></td>
+							<td class="money_drop_container" id="container8"></td>
+							<td class="money_drop_container" id="container9"></td>
+						</tr>
+						<tr>
+							<td class="money_drop_container" id="container10"></td>
+							<td class="money_drop_container" id="container11"></td>
+							<td class="money_drop_container" id="container12"></td>
+							<td class="money_drop_container" id="container13"></td>
+							<td class="money_drop_container" id="container14"></td>
+							<td class="money_drop_container" id="container15"></td>
+							<td class="money_drop_container" id="container16"></td>
+							<td class="money_drop_container" id="container17"></td>
+							<td class="money_drop_container" id="container18"></td>
+						</tr>
+					</table>
+				</div>
+				<br>
+				<div class="buttons_container">
+					<button class="btn btn-secondary btn-lg" id="clearcontainerbutton">Clear</button>
+					<button class="btn btn-primary btn-lg" id="makepaymentbutton">Make Payment!</button>
+				</div>
+				<br>
 				<div class="row border border-dark" id="money_source_container">
-						<img class="notes"
-							src="https://dl.dropboxusercontent.com/s/yl61xbd7ob72hxv/Singapore_Bill_50_C.png?dl=0"
-							alt="2 dollar note">
-						<img class="notes"
-							src="https://dl.dropboxusercontent.com/s/fu6wrjd2x2knnst/Singapore_Bill_10_C.png?dl=0"
-							alt="2 dollar note">
-						<img class="notes" src="https://dl.dropboxusercontent.com/s/ececrg6fmdwmebw/Singapore_Bill_5_C.png?dl=0"
-							alt="2 dollar note">
-						<img class="notes" src="https://dl.dropboxusercontent.com/s/6ll7d9mp8hy6mjm/Singapore_Bill_2_C.png?dl=0"
-							alt="2 dollar note">
-						<img class="largecoin"
-							src="https://dl.dropboxusercontent.com/s/rwogs4unutjrluq/Singapore_Coin_1D_C.png?dl=0"
-							alt="2 dollar note">
-						<img class="largecoin"
-							src="https://dl.dropboxusercontent.com/s/2wg34akamw696y8/Singapore_Coin_50_C.png?dl=0"
-							alt="2 dollar note">
-						<img class="smallcoin"
-							src="https://dl.dropboxusercontent.com/s/anmxq1s8znduo67/Singapore_Coin_20_C.png?dl=0"
-							alt="2 dollar note">
-						<img class="smallcoin"
-							src="https://dl.dropboxusercontent.com/s/0krz0i2cmyqbxdj/Singapore_Coin_10_C.png?dl=0"
-							alt="2 dollar note">
+					<img class="money notes" draggable="true" src="/images/rsz_Singapore_Bill_50_C.png" alt="50dollars">
+					<img class="money notes" draggable="true" src="/images/rsz_Singapore_Bill_10_C.png" alt="10dollars">
+					<img class=" money notes" draggable="true" src="/images/rsz_Singapore_Bill_5_C.png" alt="5dollars">
+					<img class="money notes" draggable="true" src="/images/rsz_Singapore_Bill_2_C.png" alt="2dollars">
+					<img class="money largecoin" draggable="true" src="/images/rsz_Singapore_Coin_1D_C.png"
+						alt="1dollar">
+					<img class="money largecoin" draggable="true" src="/images/rsz_Singapore_Coin_50_C.png"
+						alt="50cents">
+					<img class="money smallcoin" draggable="true" src="/images/rsz_Singapore_Coin_20_C.png"
+						alt="20cents">
+					<img class="money smallcoin" draggable="true" src="/images/rsz_Singapore_Coin_10_C.png"
+						alt="10cents">
 				</div>
 			</div>
 			<div class="col-3">
@@ -76,6 +106,200 @@
 			<div>
 			</div>
 			<script th:inline="javascript">
+
+				window.onload = (event) => {
+					var scorelineElement = document.getElementById("scoreline");
+					var question_answer = document.getElementById("question_answer");
+					var questionsArray = [[${tenDoubleNumbers}]];
+					var questionNumberElement = document.getElementById('questionNumber');
+					var checkIfAnsweredRecord = Array(10).fill(false);
+					var moneyImagesPath = {
+						"10cents": "/images/rsz_Singapore_Coin_10_C.png",
+						"20cents": "/images/rsz_Singapore_Coin_20_C.png",
+						"50cents": "/images/rsz_Singapore_Coin_50_C.png",
+						"1dollar": "/images/rsz_Singapore_Coin_1D_C.png",
+						"2dollars": "/images/rsz_Singapore_Bill_2_C.png",
+						"5dollars": "/images/rsz_Singapore_Bill_5_C.png",
+						"10dollars": "/images/rsz_Singapore_Bill_10_C.png",
+						"50dollars": "/images/rsz_Singapore_Bill_50_C.png"
+					};
+
+					var questionsButtons = document.getElementsByClassName('questionButtons');
+					for (var i = 0; i < questionsButtons.length; i++) {
+						questionsButtons[i].addEventListener('click', loadNewQuestion);
+					};
+
+					var money_images = document.getElementsByClassName('money');
+					var money_containers = document.getElementsByClassName('money_drop_container');
+					var container_hovered_over = null;
+					var clearContainerButton = document.getElementById('clearcontainerbutton');
+					clearContainerButton.addEventListener('click',clearMoneyContainer);
+					var submitButton = document.getElementById('makepaymentbutton');
+					submitButton.addEventListener('click', submitPayment);
+					
+					var counter = 1;
+
+					for (var i = 0; i < money_images.length; i++) {
+						money_images[i].addEventListener('dragstart', onDragStart);
+					}
+
+					for (var i = 0; i < money_containers.length; i++) {
+						money_containers[i].addEventListener('dragenter', onDragEnter);
+						money_containers[i].addEventListener('dragover', onDragOver);
+						money_containers[i].addEventListener('drop', onDrop);
+					}
+
+					function loadNewQuestion(event) {
+						clearMoneyContainer();
+						questionNumberElement.innerText = "Question " + event.target.getAttribute('id').substring(8);
+						var questionNumber = parseInt(event.target.getAttribute('id').substring(8));
+						var questionAnswer = questionsArray[questionNumber - 1].toFixed(2);
+						question_answer.innerText = questionAnswer;
+						if (checkIfAnsweredRecord[questionNumber - 1] == false) {
+							clearContainerButton.style.visibility = 'visible';
+							submitButton.innerText = 'Make Payment';
+							submitButton.disabled = false;
+							document.getElementById("speechBubbleContainer").innerText = "Hi Elliot! The total amount due today is $" + questionAnswer.toString() + ".";
+							enableDropZone();
+						}
+						else {
+							submitButton.disabled = true;
+							disableDropZone();
+							if (checkIfAnsweredRecord[questionNumber - 1][0] == "Correct") {
+								document.getElementById("speechBubbleContainer").innerText = "Excellent job Elliot! You gave me the amount I asked for ($" + questionAnswer.toString() + ") correctly!";
+							}
+							else {
+								var answerPreviouslyGiven = checkIfAnsweredRecord[questionNumber - 1][1];
+								document.getElementById("speechBubbleContainer").innerText = "I am sorry but you did not give me the correct amount. I asked for ($" + questionAnswer.toString() + ") but you gave me ($" + answerPreviouslyGiven + ") instead.";
+							}
+						}
+					}
+
+					function onDragStart(event) {
+						let target = event.target;
+						if (target && target.nodeName == 'IMG') {
+							event.dataTransfer.clearData();
+							// Store a ref. on the dragged elem
+							const imgSrc = target.getAttribute('src');
+							const imgAlt = target.getAttribute('alt');
+							let img = new Image();
+							img.src = imgSrc;
+							event.dataTransfer.setDragImage(img, 1, 1);
+							event.dataTransfer.setData('text/plain', imgAlt);
+							const dataSource = event.dataTransfer.getData('text/plain');
+						}
+					}
+
+					function onDragEnter(event) {
+						container_hovered_over = event.target;
+						const dataSource1 = event.dataTransfer.getData('text/plain');
+						event.preventDefault();
+					}
+
+					function onDragOver(event) {
+						event.preventDefault(); // Prevent the default behavior
+					}
+
+					function onDrop(event) {
+						var img = document.createElement('img');
+						if (container_hovered_over.nodeName == 'IMG') {
+							container_hovered_over = container_hovered_over.parentElement;
+						}
+						// Get the id of the target and add the moved element to the target's DOM
+						img.alt = event.dataTransfer.getData('text/plain');
+						img.src = moneyImagesPath[img.alt];
+						if (container_hovered_over.childNodes.length > 0) {
+							container_hovered_over.removeChild(container_hovered_over.firstChild);
+						}
+						container_hovered_over.appendChild(img);
+					}
+
+					function computeTotalAmount() {
+						var totalsum = 0;
+						for (var i = 0; i < money_containers.length; i++) {
+							if (money_containers[i].firstChild) {
+								switch (money_containers[i].firstChild.alt) {
+									case "10cents":
+										totalsum += 0.1;
+										break;
+									case "20cents":
+										totalsum += 0.2;
+										break;
+									case "50cents":
+										totalsum += 0.5;
+										break;
+									case "1dollar":
+										totalsum += 1;
+										break;
+									case "2dollars":
+										totalsum += 2;
+										break;
+									case "5dollars":
+										totalsum += 5;
+										break;
+									case "10dollars":
+										totalsum += 10;
+										break;
+									case "50dollars":
+										totalsum += 50;
+										break;
+								};
+							};
+						};
+						return totalsum;
+					};
+
+					function submitPayment() {
+						submitButton.disabled = true;
+						submitButton.innerText = "Answered";
+						clearContainerButton.style.visibility = 'hidden';
+						var totalAmountPaid = computeTotalAmount().toFixed(2);
+						var correctAnswer = parseFloat(question_answer.innerText).toFixed(2);
+						var currentQuestion = parseInt(questionNumberElement.innerText.substring(8));
+						var questionToggleButton = document.getElementById("Question" + (parseInt(currentQuestion)));
+						disableDropZone();
+						if (totalAmountPaid == correctAnswer) {
+							document.getElementById("speechBubbleContainer").innerText = "Excellent job Elliot! You gave me the amount I asked for ($" + correctAnswer.toString() + ") correctly!";
+							checkIfAnsweredRecord[currentQuestion - 1] = ["Correct", totalAmountPaid];
+							var current_scoreline = scorelineElement.innerText;
+							var updated_scoreline = parseInt(current_scoreline) + 1;
+							scorelineElement.innerText = updated_scoreline;
+							questionToggleButton.classList.remove("btn-dark");
+							questionToggleButton.classList.add("btn-success");
+						}
+						else {
+							document.getElementById("speechBubbleContainer").innerText = "I am sorry but you did not give me the correct amount. I asked for ($" + correctAnswer.toString() + ") but you gave me ($" + totalAmountPaid + ") instead.";
+							checkIfAnsweredRecord[currentQuestion - 1] = ["Wrong", totalAmountPaid];
+							questionToggleButton.classList.remove("btn-dark");
+							questionToggleButton.classList.add("btn-danger");
+						}
+
+					}
+
+					function disableDropZone() {
+						submitButton.removeEventListener('click', submitPayment);
+						for (var i = 0; i < money_containers.length; i++) {
+							money_containers[i].removeEventListener('drop', onDrop);
+						}
+					}
+
+					function enableDropZone() {
+						submitButton.addEventListener('click', submitPayment);
+						for (var i = 0; i < money_containers.length; i++) {
+							money_containers[i].addEventListener('drop', onDrop);
+						}
+					}
+
+					function clearMoneyContainer() {
+						for (var i = 0; i < money_containers.length; i++) {
+							if (money_containers[i].childNodes.length > 0) {
+								money_containers[i].removeChild(money_containers[i].firstChild);
+							};
+						};
+					};
+
+				};
+
 			</script>
 </body>
 

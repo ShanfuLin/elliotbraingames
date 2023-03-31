@@ -21,6 +21,7 @@ public class MathQuestion {
 	
 	private int answer;
 	
+	@SuppressWarnings("unused")
 	private int setAnswer() {
 		if(this.questionType.toString() == "Addition") {
 			this.answer = firstNumberPair + secondNumberPair;
@@ -28,6 +29,23 @@ public class MathQuestion {
 		else if(this.questionType.toString() == "Subtraction") {
 			this.answer = firstNumberPair - secondNumberPair;
 		}
+		else if(this.questionType.toString() == "Multiplication") {
+			this.answer = firstNumberPair * secondNumberPair;
+		}		
 		return answer;
+	}
+	
+	@Override
+	public String toString() {
+		String toPrint = "";
+		if(this.questionType.toString() == "MULTIPLICATION") {
+			toPrint = Integer.toString(this.firstNumberPair).concat(" x ").concat(Integer.toString(this.secondNumberPair)).concat(" = ").concat(Integer.toString(this.answer));
+		} else if (this.questionType.toString() == "ADDITION") {
+			toPrint = Integer.toString(this.firstNumberPair).concat(" + ").concat(Integer.toString(this.secondNumberPair)).concat(" = ").concat(Integer.toString(this.answer));
+		}
+		else if (this.questionType.toString() == "SUBTRACTION") {
+			toPrint = Integer.toString(this.firstNumberPair).concat(" - ").concat(Integer.toString(this.secondNumberPair)).concat(" = ").concat(Integer.toString(this.answer));
+		}
+		return toPrint;
 	}
 }

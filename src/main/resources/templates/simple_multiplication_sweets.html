@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Elliot Learns How To Multiply and Share</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link th:href="@{/styles/css/main.css}" rel="stylesheet" />
+</head>
+
+<body>
+	<div class="card-header text-center">
+		<h1><b>Elliot</b> Learns To Multiply and Share with Friends!</h1>
+		<h3>Multiplication (1 to 10)</h3>
+	</div>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-9">
+				<div>
+					<p id="questionNumber">Question 1
+					<p>
+				</div>
+				<br>
+				<div class="row center-content" id="children_sharing_container">
+					<div>
+						<img id="children_sharing_image" class="cartoon_images" src="/images/children_sharing.jpg"
+							alt="children sharing goodies">
+					</div>
+					<p hidden>Q1</p>
+					<div class="speech-bubble" id="speechBubbleContainer">
+						<span>Elliot has </span>
+						<span id="speechbubble_first_number" th:text="${tenQuestions[0].firstNumberPair}">3</span>
+						<span>friends. He would like to give </span>
+						<span id="speechbubble_second_number" th:text="${tenQuestions[0].secondNumberPair}">5</span>
+						<span>sweets to each friend.</span> 
+						<span id="variable_speech_bubble">How many sweets does he need in total?</span>
+					</div>
+				</div>
+				<div style="text-align: center; min-width: 200px">
+					<p th:text=0 id="questionID" hidden></p>
+					<div class="center-content">
+						<table>
+							<tr>
+								<td>
+									<span th:text="${tenQuestions[0].firstNumberPair}" class="questionNumbers"
+										id="firstNumber"></span>
+								</td>
+								<td>
+									<span class="questionNumbers"> x </span>
+								</td>
+								<td>
+									<span th:text="${tenQuestions[0].secondNumberPair}" class="questionNumbers"
+										id="secondNumber"></span>
+								</td>
+								<td>
+									<span class="questionNumbers"> = </span>
+								</td>
+								<td>
+									<input type="number" id="enteredAnswer"
+										style="width:250px; height:130px; font-size:125px">
+								</td>
+							</tr>
+						</table>
+						<p th:text="${tenQuestions[0].answer}" id="questionAnswer" hidden></p>
+					</div>
+											<br><br>
+						<button style="font-size: 30px;" id="submitButton" class="btn btn-primary"
+							onClick="submitAnswerFunction()">Submit Answer</button>
+				</div>
+
+			</div>
+			<div class="col-3">
+				<table class="table table-bordered">
+					<tr>
+						<p>
+							<span class="scoreclass">
+								Score:
+							</span>
+							<span id="scoreline" class="scoreclass">
+								0
+							</span>
+							<span class="scoreclass">
+								/10
+							</span>
+						</p>
+					</tr>
+					<tr th:each="i : ${#numbers.sequence(1, 10)}">
+						<p>
+							<button th:text="'Question ' + ${i}" th:id="'Question' + ${i}" style="font-size: 30px;"
+								class="questionButtons btn btn-dark">
+							</button>
+						</p>
+					</tr>
+				</table>
+			</div>
+			<div>
+			</div>
+			<script th:inline="javascript">
+				var checkIfAnsweredRecord = Array(10).fill(false);
+				localStorage.setItem('checkIfAnswered', JSON.stringify(checkIfAnsweredRecord));
+				localStorage.setItem('numberQAnswered', 0);
+				var elements = document.getElementsByClassName("questionButtons");
+				var questionIDHolder = document.getElementById("questionID");
+				var questionNumberElement = document.getElementById('questionNumber');
+				var firstNumberElement = document.getElementById("firstNumber");
+				var secondNumberElement = document.getElementById("secondNumber");
+				var questionAnswerElement = document.getElementById("questionAnswer");
+				var userInputElement = document.getElementById("enteredAnswer");
+				var scorelineElement = document.getElementById("scoreline");
+				var submitButtonElement = document.getElementById("submitButton");
+				var speechbubble_first_number = document.getElementById("speechbubble_first_number");
+				var speechbubble_second_number = document.getElementById("speechbubble_second_number");
+				var variable_speech_bubble = document.getElementById("variable_speech_bubble");
+				var wrongAnswerRecordArray = [];
+
+				userInputElement.addEventListener("keypress", function (event) {
+					if (event.key == "Enter") {
+						submitAnswerFunction();
+					}
+				});
+
+				var changeQuestionContent = function changeQuestionContent(event) {
+					questionNumberElement.innerText = "Question " + event.target.getAttribute('id').substring(8);
+					userInputElement.value = "";
+					var retrievedCheckIfAnsweredRecord = JSON.parse(localStorage.getItem('checkIfAnswered'));
+					var buttonID = event.target.id.substring(8) - 1;
+					var questionsArray = [[${tenQuestions}]];
+					var firstNumberToInsert = questionsArray[buttonID].firstNumberPair;
+					var secondNumberToInsert = questionsArray[buttonID].secondNumberPair;
+					var answerToInsert = questionsArray[buttonID].answer;
+					var questionType = questionsArray[buttonID].questionType;
+					speechbubble_first_number.innerText = firstNumberToInsert;
+					speechbubble_second_number.innerText = secondNumberToInsert;
+					questionIDHolder.innerText = buttonID;
+					firstNumberElement.innerText = firstNumberToInsert;
+					secondNumberElement.innerText = secondNumberToInsert;
+					questionAnswerElement.innerText = answerToInsert;
+					if (retrievedCheckIfAnsweredRecord[buttonID] != false) {
+						userInputElement.value = retrievedCheckIfAnsweredRecord[buttonID][1];
+						userInputElement.disabled = true;
+						submitButtonElement.disabled = true;
+						submitButtonElement.innerText = "Answered";
+						variable_speech_bubble.innerText = "He will need " + answerToInsert + " sweets in total.";
+					}
+					else {
+						userInputElement.disabled = false;
+						submitButtonElement.disabled = false;
+						submitButtonElement.innerText = "Submit Answer";
+						variable_speech_bubble.innerText = "How many sweets does he need in total?";
+					}
+				};
+
+				for (var i = 0; i < elements.length; i++) {
+					elements[i].addEventListener('click', changeQuestionContent, false)
+				};
+
+				function submitAnswerFunction() {
+					userInputElement.disabled = true;
+					submitButtonElement.disabled = true;
+					submitButtonElement.innerText = "Answered";
+					variable_speech_bubble.innerText = "He will need " + questionAnswerElement.innerText + " sweets in total.";
+					var questionNumber = questionIDHolder.innerText;
+					//QuestionNumber is zero indexed
+					var questionToggleButton = document.getElementById("Question" + (parseInt(questionNumber) + 1));
+					var userAnswer = userInputElement.value;
+					var retrievedCheckIfAnsweredRecord = JSON.parse(localStorage.getItem('checkIfAnswered'));
+					retrievedCheckIfAnsweredRecord[questionNumber] = [true, userAnswer];
+					localStorage.setItem('checkIfAnswered', JSON.stringify(retrievedCheckIfAnsweredRecord));
+					var previousNumberQAnswer = parseInt(localStorage.getItem('numberQAnswered'));
+					localStorage.setItem('numberQAnswered', (previousNumberQAnswer + 1));
+					if (userAnswer == questionAnswerElement.innerText) {
+						var current_scoreline = scorelineElement.innerText;
+						var updated_scoreline = parseInt(current_scoreline) + 1;
+						scorelineElement.innerText = updated_scoreline;
+						questionToggleButton.classList.remove("btn-dark");
+						questionToggleButton.classList.add("btn-success");
+					}
+					else {
+						questionToggleButton.classList.remove("btn-dark");
+						questionToggleButton.classList.add("btn-danger");
+						var questionAndWrongAnswerGiven = firstNumberElement.innerText + " " + "x" + " " + secondNumberElement.innerText + " = " + userAnswer;
+						console.log(questionAndWrongAnswerGiven);
+						wrongAnswerRecordArray.push(questionAndWrongAnswerGiven);
+					}
+					if (localStorage.getItem('numberQAnswered') == '10') {
+						const scoredata = {score: updated_scoreline, };
+						fetch("/submitscore", {
+							method: "POST", // or 'PUT'
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(scoredata),
+						})
+							.then((response) => response.json())
+							.then((data) => {
+								console.log("Success:", data);
+							})
+							.catch((error) => {
+								console.error("Error:", error);
+							});
+
+						const wronganswersrecord = {questions: wrongAnswerRecordArray, };
+						fetch("/submitscore/wronganswersrecord", {
+							method: "POST", // or 'PUT'
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify(wronganswersrecord),
+						})
+							.then((response) => response)
+							.then((data) => {
+								console.log("Success:", data);
+							})
+							.catch((error) => {
+								console.error("Error:", error);
+							});
+
+					}
+				}
+			</script>
+</body>
+
+</html>

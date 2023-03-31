@@ -36,6 +36,7 @@ public class SubmitScoreController {
 		LocalDateTime datetimenow = LocalDateTime.now();
 		quizscore.setDatetime(datetimenow);
         var headers = new HttpHeaders();
+        System.out.println(quizscore.getScore());
         headers.add("Responded", "MyController");
         QuizScore savedquizscore = quizscoreservice.saveQuizScore(quizscore);
         return ResponseEntity.accepted().headers(headers).body(savedquizscore);

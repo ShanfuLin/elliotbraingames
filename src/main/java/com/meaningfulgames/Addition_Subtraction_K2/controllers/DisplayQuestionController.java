@@ -34,7 +34,24 @@ public class DisplayQuestionController {
 	
 	@GetMapping(value = {"/CountingDollarsAndCents"})
 	public String CountDollarsAndCents(Model model) {
+		double[] myDoubleNumbers = createMathQuestion.createTenRandomDoubleNumbers();
+		for (double individual :myDoubleNumbers) {
+			System.out.println(individual);
+		}
+		model.addAttribute("tenDoubleNumbers", myDoubleNumbers);
 		return "countmoneypage";
+	}
+	
+	@GetMapping(value = {"/MultiplicationOneToTen"})
+	public String MultiplicationOneToTen(Model model) {
+		List<MathQuestion> tenQuestions = createMathQuestion.createTenRandomMultiplicationQuestions();
+		System.out.println("Hello World!");
+		System.out.println(tenQuestions.size());
+		for (MathQuestion individual: tenQuestions) {
+			System.out.println(individual);
+		}
+		model.addAttribute("tenQuestions", tenQuestions);
+		return "simple_multiplication_sweets";
 	}
 	
 }

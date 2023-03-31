@@ -17,30 +17,61 @@
 	font-size: 30px;
 }
 
+.buttons_container{
+	text-align: center;
+}
+
 .notes{
-	max-width: 250px;
-	max-height: 150px;
+	width: 250px;
+	height: 150px;
+	padding:15px;
 }
 
 .largecoin{
-	max-width: 150px;
-	max-height: 125px;
+	width: 150px;
+	height: 125px;
+	padding:15px;
 }
 
 .smallcoin{
-	max-width: 125px;
-	max-height: 100px;
+	width: 125px;
+	height: 100px;
+	padding:15px;
 }
 
+.answer_table{
+	width: 100%;
+	height: 250px;
+	text-align: center;
+	table-layout:fixed;
+	border: 1px black solid;
+}
+
+.money_drop_container{
+	height: 125px;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
 #cashier_cartoon_container{
   	align-items: center;
   	justify-content: center;	
 }
 
+.cartoon_images{
+    border-radius: 200px;
+	width: 550px;
+	height: 400px;
+}
+
 #cashier_cartoon{
     border-radius: 200px;
-	width: 700px;
-	height: 600px;
+	width: 550px;
+	height: 400px;
 }
 
 #money_source_container{
@@ -50,3 +81,35 @@
 	width: 1600px;
 	height: 200px;
 }
+
+.speech-bubble {
+    position: relative;
+    background: #26cca3;
+    color: #f7f8fa;
+    font-family: Arial;
+    font-size: 30px;
+    text-align: center;
+    width: 368px;
+    border-radius: 20px;
+    padding: 30px; /* added padding */
+}
+
+.speech-bubble:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    z-index: 1;
+    border-style: solid;
+    border-width: 0 30px 30px 0; /* increased border width */
+    border-color: transparent #26cca3 transparent transparent;
+    top: 25%; /* adjusted top position */
+    left: -30px; /* adjusted left position */
+    margin-top: -15px;
+}
+
+#questionNumber{
+	font-weight: bold;
+	font-size: 30px;
+}
+

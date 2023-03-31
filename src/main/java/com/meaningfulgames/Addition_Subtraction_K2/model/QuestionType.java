@@ -7,6 +7,7 @@ import lombok.Getter;
 public enum QuestionType {
 	
 	ADDITION("Addition"),
+	MULTIPLICATION("Multiplication"),
 	SUBTRACTION("Subtraction");
 	
 	@Getter

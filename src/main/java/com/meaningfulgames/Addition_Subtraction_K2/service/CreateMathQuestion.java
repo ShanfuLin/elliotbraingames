@@ -63,5 +63,34 @@ public class CreateMathQuestion {
 		}
 		return tenQuestions;
 	}
+	
+	public double[] createTenRandomDoubleNumbers() {
+		double[] newDoubleArray = new double[10];
+		Random randomNumber = new Random();
+		for (int i=0; i < 10; i ++) {
+			double number = randomNumber.nextInt(1, 99);
+			newDoubleArray[i] = number/10;
+		}
+		return newDoubleArray;
+	}
 
+	
+	public List<MathQuestion> createTenRandomMultiplicationQuestions(){
+		int counter = 0;
+		Random randomNumber = new Random();
+		List<MathQuestion> tenQuestions = new ArrayList<MathQuestion>();
+		while (counter < 10) {
+			int firstMultiplicationNumber = randomNumber.nextInt(1,12);
+			int secondMultiplicationNumber = randomNumber.nextInt(0,12);
+			MathQuestion multiplicationQuestion = new MathQuestion();
+			multiplicationQuestion.setFirstNumberPair(firstMultiplicationNumber);
+			multiplicationQuestion.setSecondNumberPair(secondMultiplicationNumber);
+			multiplicationQuestion.setQuestionType(QuestionType.MULTIPLICATION);
+			multiplicationQuestion.setAnswer(firstMultiplicationNumber*secondMultiplicationNumber);
+			tenQuestions.add(multiplicationQuestion);
+			counter += 1;
+		}
+		return tenQuestions;
+	}
+	
 }
